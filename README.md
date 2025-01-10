@@ -147,9 +147,25 @@ cd autonomous-being-framework
 
 ### 2. Install Dependencies
 
+First, install `uv` if not already installed:
 ```bash
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
+Create and activate a virtual environment:
+```bash
+uv venv
+source .venv/bin/activate  # On Unix/macOS
+# Or on Windows:
+# .venv\Scripts\activate
+```
+
+Then install dependencies:
+```bash
+uv pip install -r requirements.txt
+```
+
+Note: Always make sure your virtual environment is activated when working with the project. You'll know it's activated when you see `(.venv)` at the start of your terminal prompt.
 
 ### 3. Onboarding & Configuration
 
