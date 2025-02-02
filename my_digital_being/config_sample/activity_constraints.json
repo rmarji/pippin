@@ -35,6 +35,12 @@
         "openai_chat"
       ],
       "min_memory_space": 300
+    },
+    "MoneyEvaluationActivity": {
+      "required_skills": [
+        "openai_chat"
+      ],
+      "min_memory_space": 200
     }
   },
   "activities_config": {
@@ -73,6 +79,9 @@
     },
     "AnalyzeNewCommitsActivity": {
       "enabled": false
+    },
+    "MoneyEvaluationActivity": {
+      "enabled": true
     }
   }
 }
