@@ -2,8 +2,11 @@ import logging
 import random
 from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime, timedelta
+from rich.console import Console
+from rich.table import Table
 
 logger = logging.getLogger(__name__)
+console = Console()
 
 
 class ActivitySelector:
@@ -51,9 +54,7 @@ class ActivitySelector:
         available_activities = self._get_available_activities()
         if not available_activities:
             next_available = self.get_next_available_times()
-            logger.info(
-                f"No activities available at this time. Next available activities: {next_available}"
-            )
+            self._print_activity_status(next_available)
             return None
 
         # Step 2: filter out ones that fail "energy" or "activity_requirements"
@@ -73,7 +74,6 @@ class ActivitySelector:
             return None
 
         # Step 3: personality-based selection
-        # (If you have a "personality" dict in state, else use {}.)
         personality = self.state.get_current_state().get("personality", {})
         selected_activity = self._select_based_on_personality(
             suitable_activities, personality
@@ -82,10 +82,38 @@ class ActivitySelector:
         if selected_activity:
             chosen_name = selected_activity.__class__.__name__
             logger.info(f"Selected activity: {chosen_name}")
-            # Step 4: record the time we picked it
             self.last_activity_times[chosen_name] = datetime.now()
 
         return selected_activity
+
+    def _print_activity_status(self, activities: List[Dict[str, Any]]):
+        """Print a formatted table of activity status."""
+        table = Table(
+            title="Activity Status",
+            show_header=True,
+            header_style="bold magenta",
+            border_style="blue"
+        )
+        
+        table.add_column("Activity", style="cyan")
+        table.add_column("Status", style="green")
+        table.add_column("Next Available", style="yellow")
+        table.add_column("Cooldown", style="red")
+
+        for activity in activities:
+            name = activity["activity"]
+            if activity["available_in_seconds"] == 0:
+                status = "✓ Available"
+                next_time = "Now"
+            else:
+                status = "⏳ Cooling down"
+                next_time = activity["next_available_at"]
+
+            cooldown = str(timedelta(seconds=activity["cooldown_period"]))
+            table.add_row(name, status, next_time, cooldown)
+
+        console.print(table)
+        console.print()
 
     def get_next_available_times(self) -> List[Dict[str, Any]]:
         """

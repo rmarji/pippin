@@ -1,0 +1,47 @@
+# Cline Rules File
+# This file defines core rules and requirements for the project
+
+# Memory Bank Requirements
+REQUIRED_DOCS_DIR=my_digital_being/cline_docs
+REQUIRED_DOCS=[
+    "productContext.md",    # Why this project exists, problems it solves, how it works
+    "activeContext.md",     # Current work, recent changes, next steps
+    "systemPatterns.md",    # System architecture, key technical decisions
+    "techContext.md",       # Technologies, dev setup, constraints  
+    "progress.md"          # What works, what's left, status
+]
+
+# Documentation Rules
+1. Memory Bank files must exist before any development
+2. All Memory Bank files must be up-to-date and accurate
+3. Development cannot proceed without complete context
+4. Documentation must be updated after significant changes
+
+# Development Workflows
+1. Check Memory Bank files at start
+2. Read all documentation before proceeding
+3. Verify complete context
+4. Follow established patterns
+5. Document changes that affect system understanding
+
+# Error Handling
+1. Stop immediately if context is unclear
+2. Read activeContext.md
+3. Verify understanding with user
+4. Start with small, safe changes
+5. Document error resolution process
+
+# Memory Bank Updates
+1. Required when "update memory bank" is requested
+2. Document current state completely
+3. Make next steps explicit
+4. Complete current task before reset
+
+# Confidence Requirements
+1. Rate confidence 0-10 for changes
+2. Must explain if confidence < 9:
+   - Known information
+   - Uncertainties
+   - Investigation needed
+3. Only proceed when confidence ≥ 9
+4. Document findings for future reference

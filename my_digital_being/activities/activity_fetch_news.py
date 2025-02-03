@@ -42,16 +42,30 @@ class FetchNewsActivity(ActivityBase):
             return ActivityResult(success=False, error=str(e))
 
     async def _fetch_articles(self) -> List[Dict[str, Any]]:
-        """Simulate fetching articles."""
-        # In a real implementation, this would use web scraping
-        articles = []
-        for i in range(self.max_articles):
-            articles.append(
-                {
-                    "title": f"Simulated Article {i+1}",
-                    "topic": self.topics[i % len(self.topics)],
-                    "summary": f"This is a simulated news article about {self.topics[i % len(self.topics)]}",
-                    "url": f"https://example.com/article_{i+1}",
-                }
+        from linkup import LinkupClient
+
+        client = LinkupClient(api_key="6cc75ac1-254c-43b1-9c8f-10ab869e307b")
+        try:
+            logger.info("Using LinkupClient to fetch news")
+            response = client.search(
+                query="latest technology news",
+                depth="standard",
+                output_type="searchResults"
             )
-        return articles
+            articles = []
+            results = response.get("results", [])
+            for idx, result in enumerate(results[: self.max_articles]):
+                topic = "general"
+                articles.append(
+                    {
+                        "title": result.get("title", f"Article {idx + 1}"),
+                        "topic": topic,
+                        "summary": result.get("snippet", "No summary available"),
+                        "url": result.get("link", "https://example.com"),
+                    }
+                )
+            logger.info(f"Fetched {len(articles)} articles via LinkupClient")
+            return articles
+        except Exception as e:
+            logger.error(f"LinkupClient search failed: {e}")
+            return []
